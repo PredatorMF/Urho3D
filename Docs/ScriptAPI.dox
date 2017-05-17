@@ -922,6 +922,16 @@ namespace Urho3D
 - %ElementX : int (only if element is non-null)
 - %ElementY : int (only if element is non-null)
 
+## %Urho2D events
+
+### ParticlesEnd
+- %Node : Node pointer
+- %Effect : ParticleEffect2D pointer
+
+### ParticlesDuration
+- %Node : Node pointer
+- %Effect : ParticleEffect2D pointer
+
 
 \page AttributeList Attribute list
 
@@ -1928,6 +1938,11 @@ namespace Urho3D
 - %Value : float
 - %Show %Percent %Text : bool
 
+### RaycastVehicle
+- %Wheel %data : VariantVector
+- %Maximum %side %slip %threshold : float
+- %RPM %for %wheel %motors %in %air (0=calculate) : float
+
 ### RibbonTrail
 - %Is %Enabled : bool
 - %Max %Lights : int
@@ -2768,6 +2783,7 @@ namespace Urho3D
 <a href="#Class_Quaternion"><b>Quaternion</b></a>
 <a href="#Class_Ray"><b>Ray</b></a>
 <a href="#Class_RayQueryResult"><b>RayQueryResult</b></a>
+<a href="#Class_RaycastVehicle"><b>RaycastVehicle</b></a>
 <a href="#Class_Rect"><b>Rect</b></a>
 <a href="#Class_RefCounted"><b>RefCounted</b></a>
 <a href="#Class_RenderPath"><b>RenderPath</b></a>
@@ -7871,6 +7887,7 @@ Properties:
 
 - String category // readonly
 - bool focus // readonly
+- Vector2 inputScale // readonly
 - JoystickState@[] joysticks // readonly
 - JoystickState@[] joysticksByIndex // readonly
 - JoystickState@[] joysticksByName // readonly
@@ -7941,6 +7958,15 @@ Properties:
 - int x
 - int y
 
+Constants:
+
+- IntVector2 DOWN
+- IntVector2 LEFT
+- IntVector2 ONE
+- IntVector2 RIGHT
+- IntVector2 UP
+- IntVector2 ZERO
+
 <a name="Class_IntVector3"></a>
 
 ### IntVector3
@@ -7957,6 +7983,17 @@ Properties:
 - int x
 - int y
 - int z
+
+Constants:
+
+- IntVector3 BACK
+- IntVector3 DOWN
+- IntVector3 FORWARD
+- IntVector3 LEFT
+- IntVector3 ONE
+- IntVector3 RIGHT
+- IntVector3 UP
+- IntVector3 ZERO
 
 <a name="Class_JSONFile"></a>
 
@@ -8004,12 +8041,16 @@ Methods:
 - float GetFloat() const
 - int GetInt() const
 - uint GetUInt() const
+- Variant GetVariant() const
+- VariantMap GetVariantMap() const
 - void Insert(uint, const JSONValue&)
 - const JSONValue& Get(const String&) const
 - void Pop()
 - void Push(const JSONValue&)
 - void Resize(uint)
 - void Set(const String&, const JSONValue&)
+- void SetVariant(const Variant&)
+- void SetVariantMap(const VariantMap&)
 - const String& GetString() const
 
 Properties:
@@ -8020,11 +8061,13 @@ Properties:
 - bool isNumber // readonly
 - bool isObject // readonly
 - bool isString // readonly
+- String[]@ keys // readonly
 - JSONNumberType numberType // readonly
 - String numberTypeName // readonly
 - uint size // readonly
 - JSONValueType valueType // readonly
 - String valueTypeName // readonly
+- JSONValue[]@ values // readonly
 
 <a name="Class_JoystickState"></a>
 
@@ -9627,6 +9670,7 @@ Properties:
 - Vector2 scale2D
 - Scene@ scene // readonly
 - ScriptObject@ scriptObject // readonly
+- Vector3 signedWorldScale // readonly
 - String[]@ tags // readonly
 - bool temporary
 - Matrix3x4 transform // readonly
@@ -10522,6 +10566,8 @@ Methods:
 
 Properties:
 
+- float angle // readonly
+- Vector3 axis // readonly
 - Vector3 eulerAngles // readonly
 - float pitch // readonly
 - float roll // readonly
@@ -10567,6 +10613,112 @@ Properties:
 - Vector3 position
 - uint subObject
 - Vector2 textureUV
+
+<a name="Class_RaycastVehicle"></a>
+
+### RaycastVehicle
+
+Methods:
+
+- void AddWheel(Node@, Vector3, Vector3, float, float, bool)
+- void ApplyAttributes()
+- void DrawDebugGeometry(DebugRenderer@, bool)
+- Variant GetAttribute(const String&) const
+- ValueAnimation@ GetAttributeAnimation(const String&) const
+- float GetAttributeAnimationSpeed(const String&) const
+- float GetAttributeAnimationTime(const String&) const
+- WrapMode GetAttributeAnimationWrapMode(const String&) const
+- Variant GetAttributeDefault(const String&) const
+- float GetBrake(int)
+- Vector3 GetContactNormal(int)
+- Vector3 GetContactPosition(int)
+- float GetEngineForce(int)
+- bool GetInterceptNetworkUpdate(const String&) const
+- float GetMaxSuspensionTravel(int)
+- float GetSteeringValue(int)
+- Vector3 GetWheelAxle(int)
+- Vector3 GetWheelConnectionPoint(int)
+- float GetWheelDampingCompression(int)
+- float GetWheelDampingRelaxation(int)
+- Vector3 GetWheelDirection(int)
+- float GetWheelFrictionSlip(int)
+- Node@ GetWheelNode(int)
+- Vector3 GetWheelPosition(int)
+- float GetWheelRadius(int)
+- float GetWheelRestLength(int)
+- float GetWheelRollInfluence(int)
+- Vector3 GetWheelRotation(int)
+- float GetWheelSideSlipSpeed(int)
+- float GetWheelSkidInfo(int)
+- float GetWheelSkidInfoCumulative(int)
+- float GetWheelSuspensionStiffness(int)
+- bool HasSubscribedToEvent(Object@, const String&)
+- bool HasSubscribedToEvent(const String&)
+- void Init()
+- bool IsFrontWheel(int)
+- bool Load(File@, bool = false)
+- bool Load(VectorBuffer&, bool = false)
+- bool LoadJSON(const JSONValue&, bool = false)
+- bool LoadXML(const XMLElement&, bool = false)
+- void MarkNetworkUpdate() const
+- void Remove()
+- void RemoveAttributeAnimation(const String&)
+- void RemoveInstanceDefault()
+- void RemoveObjectAnimation()
+- void ResetSuspension()
+- void ResetToDefault()
+- void ResetWheels()
+- bool Save(File@) const
+- bool Save(VectorBuffer&) const
+- bool SaveJSON(JSONValue&) const
+- bool SaveXML(XMLElement&) const
+- void SendEvent(const String&, VariantMap& = VariantMap ( ))
+- void SetAnimationTime(float)
+- bool SetAttribute(const String&, const Variant&)
+- void SetAttributeAnimation(const String&, ValueAnimation@, WrapMode = WM_LOOP, float = 1.0f)
+- void SetAttributeAnimationSpeed(const String&, float)
+- void SetAttributeAnimationTime(const String&, float)
+- void SetAttributeAnimationWrapMode(const String&, WrapMode)
+- void SetBrake(int, float)
+- void SetEngineForce(int, float)
+- void SetInterceptNetworkUpdate(const String&, bool)
+- void SetMaxSuspensionTravel(int, float)
+- void SetSteeringValue(int, float)
+- void SetWheelAxle(int, Vector3)
+- void SetWheelDampingCompression(int, float)
+- void SetWheelDampingRelaxation(int, float)
+- void SetWheelDirection(int, Vector3)
+- void SetWheelFrictionSlip(int, float)
+- void SetWheelRadius(int, float)
+- void SetWheelRestLength(int, float)
+- void SetWheelRollInfluence(int, float)
+- void SetWheelSkidInfo(int, float)
+- void SetWheelSkidInfoCumulative(int, float)
+- void SetWheelSuspensionStiffness(int, float)
+- void UpdateWheelTransform(int, bool)
+- bool WheelIsGrounded(int)
+
+Properties:
+
+- bool animationEnabled
+- Variant[] attributeDefaults // readonly
+- AttributeInfo[] attributeInfos // readonly
+- Variant[] attributes
+- String category // readonly
+- bool enabled
+- bool enabledEffective // readonly
+- uint id // readonly
+- float inAirRPM
+- float maxSideSlipSpeed
+- Node@ node // readonly
+- uint numAttributes // readonly
+- int numWheels // readonly
+- ObjectAnimation@ objectAnimation
+- int refs // readonly
+- bool temporary
+- StringHash type // readonly
+- String typeName // readonly
+- int weakRefs // readonly
 
 <a name="Class_Rect"></a>
 
@@ -11335,6 +11487,7 @@ Properties:
 - Vector3 scale
 - Vector2 scale2D
 - ScriptObject@ scriptObject // readonly
+- Vector3 signedWorldScale // readonly
 - float smoothingConstant
 - float snapThreshold
 - String[]@ tags // readonly
@@ -12422,6 +12575,7 @@ Methods:
 - bool Save(VectorBuffer&) const
 - bool SaveJSON(JSONValue&) const
 - bool SaveXML(XMLElement&) const
+- void Seek(float)
 - void SendEvent(const String&, VariantMap& = VariantMap ( ))
 - void SetAnimationTime(float)
 - bool SetAttribute(const String&, const Variant&)
@@ -12495,6 +12649,7 @@ Methods:
 - bool Save(VectorBuffer&) const
 - bool SaveJSON(JSONValue&) const
 - bool SaveXML(XMLElement&) const
+- void Seek(float)
 - void SendEvent(const String&, VariantMap& = VariantMap ( ))
 - void SetAngleAttenuation(float, float)
 - void SetAnimationTime(float)
@@ -14828,6 +14983,15 @@ Properties:
 - float x
 - float y
 
+Constants:
+
+- Vector2 DOWN
+- Vector2 LEFT
+- Vector2 ONE
+- Vector2 RIGHT
+- Vector2 UP
+- Vector2 ZERO
+
 <a name="Class_Vector3"></a>
 
 ### Vector3
@@ -14855,6 +15019,17 @@ Properties:
 - float x
 - float y
 - float z
+
+Constants:
+
+- Vector3 BACK
+- Vector3 DOWN
+- Vector3 FORWARD
+- Vector3 LEFT
+- Vector3 ONE
+- Vector3 RIGHT
+- Vector3 UP
+- Vector3 ZERO
 
 <a name="Class_Vector4"></a>
 

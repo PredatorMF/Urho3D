@@ -56,6 +56,7 @@
 #include "../UI/UIEvents.h"
 #include "../UI/Window.h"
 #include "../UI/View3D.h"
+#include "../UI/RichText3D.h"
 
 #include <SDL/SDL.h>
 
@@ -1007,19 +1008,16 @@ void UI::GetElementAt(UIElement*& result, UIElement* current, const IntVector2& 
                                 i += (toSkip - 1);
                         }
                     }
+                    // Note: we cannot check for the up / left limits of positioning, since the element may be off the visible
+                    // screen but some of its layouted children will yet be visible. In down & right directions we can terminate
+                    // the loop, since all further children will be further down or right.
                     else if (parentLayoutMode == LM_HORIZONTAL)
                     {
-                        if (element->GetScreenPosition().x_ < rootElement_->GetPosition().x_)
-                            break;
-
                         if (element->GetScreenPosition().x_ >= rootElement_->GetPosition().x_ + rootElement_->GetSize().x_)
                             break;
                     }
                     else if (parentLayoutMode == LM_VERTICAL)
                     {
-                        if (element->GetScreenPosition().y_ < rootElement_->GetPosition().y_)
-                            break;
-
                         if (element->GetScreenPosition().y_ >= rootElement_->GetPosition().y_ + rootElement_->GetSize().y_)
                             break;
                     }
@@ -1907,6 +1905,7 @@ void RegisterUILibrary(Context* context)
     Cursor::RegisterObject(context);
     Text::RegisterObject(context);
     Text3D::RegisterObject(context);
+    RichTextView3D::RegisterObject(context);
     Window::RegisterObject(context);
     View3D::RegisterObject(context);
     LineEdit::RegisterObject(context);
