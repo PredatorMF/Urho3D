@@ -59,7 +59,7 @@ int RichWidgetImage::GetImageWidth() const {
 
 int RichWidgetImage::GetImageHeight() const {
   if (texture_)
-    return texture_->GetWidth();
+    return texture_->GetHeight();
   return 0;
 }
 
